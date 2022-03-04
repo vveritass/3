@@ -119,9 +119,7 @@ void Graphics::Info() {
 		}
 	}
 }
-void Graphics::Show(int nume) {
-	HWND hwnd = GetConsoleWindow(); // HWND - Handle to a window
-	HDC hdc = GetDC(hwnd); // HDC - Handle to device context
+void Graphics::Show(int nume, HWND &a, HDC&b) {
 	vector <Primitive>::iterator itera = forms.begin() + nume - 1;
 	int typenume = (*itera).GetType();
 	SelectObject(hdc, GetStockObject(WHITE_PEN));
