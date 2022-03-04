@@ -18,10 +18,10 @@ int main()
 	system("cls");
 	//Settings.Clear(); // Очищение списка
 
-	Settings.Show(1);
-	Settings.Show(2);
-	Settings.Show(3);
-	Settings.Show(4);
+	Settings.Show(1, hwnd, hdc);
+	Settings.Show(2, hwnd, hdc);
+	Settings.Show(3, hwnd, hdc);
+	Settings.Show(4, hwnd, hdc);
 
 	return 0;
 }
