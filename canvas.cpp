@@ -119,7 +119,7 @@ void Graphics::Info() {
 		}
 	}
 }
-void Graphics::Show(int nume, HWND &a, HDC&b) {
+void Graphics::Show(int nume, HWND &hwnd, HDC&hdc) {
 	vector <Primitive>::iterator itera = forms.begin() + nume - 1;
 	int typenume = (*itera).GetType();
 	SelectObject(hdc, GetStockObject(WHITE_PEN));
