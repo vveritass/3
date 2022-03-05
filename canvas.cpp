@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <iostream>
 #include <vector>
+#include "conio.h"
 using namespace std;
 Point::Point(int x, int y) {
 	this->x = x;
@@ -44,7 +45,6 @@ int Rectangles::GetRUpX() { return rightUp.GetX(); }
 int Rectangles::GetRUpY() { return rightUp.GetY(); }
 int Rectangles::GetRDownX() { return rightDown.GetX(); }
 int Rectangles::GetRDownY() { return rightDown.GetX(); }
-bool Rectangles::GetColor() { return color; }
 
 Ellipses::Ellipses(int x1, int y1, int x2, int y2, bool color) {
 	leftUp.Set(x1, y1);
