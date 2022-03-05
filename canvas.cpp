@@ -60,22 +60,23 @@ int Ellipses::GetLUpY() { return leftUp.GetY(); }
 int Ellipses::GetRDownX() { return rightDown.GetX(); }
 int Ellipses::GetRDownY() { return rightDown.GetX(); }
 
-Polygons::Polygons(int oneX, int oneY, int twoX, int twoY, int threeX, int threeY, bool color) {
-	one.Set(oneX, oneY);
-	two.Set(twoX, twoY);
-	three.Set(threeX, threeY);
+Polygons::Polygons(vector <POINT> vec, int pointsnume, bool color) {
+	vecpoints = new POINT[vec.size()];
+	for (int i = 0; i < vec.size(); i++) {
+		vecpoints[i] = vec[i];
+	}
+	this->pointsnume = pointsnume;
 }
-void Polygons::Set(int oneX, int oneY, int twoX, int twoY, int threeX, int threeY, bool color) {
-	one.Set(oneX, oneY);
-	two.Set(twoX, twoY);
-	three.Set(threeX, threeY);
+void Polygons::Set(vector <POINT> vec, int pointsnume, bool color) {
+	vecpoints = new POINT[vec.size()];
+	for (int i = 0; i < vec.size(); i++) {
+		vecpoints[i] = vec[i];
+	}
+	this->pointsnume = pointsnume;
 }
-int Polygons::GetOneX() { return one.GetX(); }
-int Polygons::GetOneY() { return one.GetY(); }
-int Polygons::GetTwoX() { return two.GetX(); }
-int Polygons::GetTwoY() { return two.GetY(); }
-int Polygons::GetThreeX() { return three.GetX(); }
-int Polygons::GetThreeY() { return three.GetY(); }
+//vector <POINT> Polygons::GetVec() { return vecpoints; }
+POINT *Polygons::GetVecpoints() { return vecpoints; }
+int Polygons::GetPointsnume() { return pointsnume; }
 
 Primitive::Primitive(void *object, int type) {
 	this->object = object;
@@ -91,61 +92,64 @@ void Graphics::Info() {
 	int typenume, counter = 0;
 	for (vector <Primitive>::iterator itera = forms.begin(); itera != forms.end(); itera++) {
 		cout << ++counter << ") ";
-		typenume = (*itera).GetType(); // Òèï ãðàôè÷åñêîãî ïðèìèòèâà
-		if (typenume == 1) { // Äëÿ òî÷êè
+		typenume = (*itera).GetType(); // Тип графического примитива
+		if (typenume == 1) { // Для точки
 			Point *p = (Point *)(*itera).GetO();
 			cout << "Point (" << p->GetX() << ", " << p->GetY() << ")" << endl;
 		}
-		else if (typenume == 2) { // Äëÿ îòðåçêà
+		else if (typenume == 2) { // Для отрезка
 			Line *p = (Line *)(*itera).GetO();
 			cout << "Line (" << p->GetSX() << ", " << p->GetSY() << ", "
 				<< p->GetEX() << ", " << p->GetEY() << ")" << endl;
 		}
-		else if (typenume == 3) { // Äëÿ ýëëèïñà
+		else if (typenume == 3) { // Для эллипса
 			Ellipses *p = (Ellipses *)(*itera).GetO();
 			cout << "Ellipse (" << p->GetLUpX() << ", " << p->GetLUpY() << ", "
 				<< p->GetRDownX() << ", " << p->GetRDownY() << ")" << endl;
 		}
-		else if (typenume == 4) { // Äëÿ ïðÿìîóãîëüíèêà
+		else if (typenume == 4) { // Для прямоугольника
 			Rectangles *p = (Rectangles *)(*itera).GetO();
 			cout << "Rectangle (" << p->GetLUpX() << ", " << p->GetLUpY() << ", "
 				<< p->GetRDownX() << ", " << p->GetRDownY() << ")" << endl;
 		}
-		else if (typenume == 5) { // Äëÿ ìíîãîóãîëüíèêà
+		else if (typenume == 5) { // Для многоугольника	
 			Polygons *p = (Polygons *)(*itera).GetO();
-			cout << "Polygon (" << p->GetOneX() << ", " << p->GetOneY() << ", "
-				<< p->GetTwoX() << ", " << p->GetTwoY() << ", "
-				<< p->GetThreeX() << ", " << p->GetThreeY() << ")" << endl;
+			POINT zero;
+			// Реализация вывода планируется. Изменение в связи с добавлением вектора - длина теперь неизвестна
+			cout << "Polygon (";
+			zero = p->GetVecpoints()[0];
+			cout << zero.x << ", " << zero.y;
+			for (int i = 1; i < p->GetPointsnume(); i++) {
+				zero = p->GetVecpoints()[i];
+				cout << ", " << zero.x << ", " << zero.y;
+			}
+			cout << ")" << endl;
 		}
 	}
 }
-void Graphics::Show(int nume, HWND &hwnd, HDC&hdc) {
+void Graphics::Show(int nume, HWND &hwnd, HDC &hdc) {
 	vector <Primitive>::iterator itera = forms.begin() + nume - 1;
 	int typenume = (*itera).GetType();
 	SelectObject(hdc, GetStockObject(WHITE_PEN));
-	if (typenume == 2) { // Äëÿ îòðåçêà
+	if (typenume == 2) { // Для отрезка
 		Line *p = (Line *)(*itera).GetO();
 		MoveToEx(hdc, p->GetSX(), p->GetSY(), NULL);
 		LineTo(hdc, p->GetEX(), p->GetEY());
 	}
-	else if (typenume == 3) { // Äëÿ ýëëèïñà
+	else if (typenume == 3) { // Для эллипса
 		Ellipses *p = (Ellipses *)(*itera).GetO();
 		SelectObject(hdc, GetStockObject(WHITE_BRUSH));
 		Ellipse(hdc, p->GetLUpX(), p->GetLUpY(), p->GetRDownX(), p->GetRDownY());
 	}
-	else if (typenume == 4) { // Äëÿ ïðÿìîóãîëüíèêà
+	else if (typenume == 4) { // Для прямоугольника
 		SelectObject(hdc, GetStockObject(NULL_BRUSH));
 		Rectangles *p = (Rectangles *)(*itera).GetO();
 		Rectangle(hdc, p->GetLUpX(), p->GetLUpY(), p->GetRDownX(), p->GetRDownY());
 	}
-	else if (typenume == 5) { // Äëÿ ìíîãîóãîëüíèêà
+	else if (typenume == 5) { // Для многоугольника
 		Polygons *p = (Polygons *)(*itera).GetO();
 		SelectObject(hdc, GetStockObject(WHITE_BRUSH));
-		MoveToEx(hdc, 700, 300, NULL);
-		LineTo(hdc, p->GetOneX(), p->GetOneY());
-		LineTo(hdc, p->GetTwoX(), p->GetTwoY());
-		LineTo(hdc, p->GetThreeX(), p->GetThreeY());
-		LineTo(hdc, 700, 300);
+		Polygon(hdc, p->GetVecpoints(), p->GetPointsnume());
 	}
 	ReleaseDC(hwnd, hdc);
 }
