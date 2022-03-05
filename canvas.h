@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-// Êëàññ òî÷êè
+// Класс точки
 class Point {
 private:
 	int x{}, y{};
@@ -16,7 +16,7 @@ public:
 	int GetY();
 };
 
-// Êëàññ îòðåçêà
+// Класс отрезка
 class Line {
 private:
 	Point start, end;
@@ -29,7 +29,7 @@ public:
 	int GetEY();
 };
 
-// Êëàññ ïðÿìîóãîëüíèêà
+// Класс прямоугольника
 class Rectangles {
 private:
 	Point leftUp, leftDown, rightUp, rightDown;
@@ -47,7 +47,7 @@ public:
 	int GetRDownY();
 };
 
-// Êëàññ ýëëèïñà
+// Класс эллипса
 class Ellipses {
 private:
 	Point leftUp, rightDown;
@@ -61,23 +61,21 @@ public:
 	int GetRDownY();
 };
 
-// Êëàññ ìíîãîóãîëüíèêà
+// Класс многоугольника
 class Polygons {
 private:
-	Point one, two, three;
+	POINT *vecpoints;
+	int pointsnume{};
 	bool color{};
 public:
-	Polygons(int oneX, int oneY, int twoX, int twoY, int threeX, int threeY, bool color);
-	void Set(int oneX, int oneY, int twoX, int twoY, int threeX, int threeY, bool color);
-	int GetOneX();
-	int GetOneY();
-	int GetTwoX();
-	int GetTwoY();
-	int GetThreeX();
-	int GetThreeY();
+	// Ожидается реализация применения bool color, пока не используется
+	Polygons(vector <POINT> vec, int pointsnume, bool color);
+	void Set(vector <POINT> vec, int pointsnume, bool color);
+	POINT *GetVecpoints();
+	int GetPointsnume();
 };
 
-// Õðàíèòñÿ óêàçàòåëü ê ãðàôè÷åñêîìó ïðèìèòèâó âìåñòå ñ åãî òèïîì
+// Хранится указатель к графическому примитиву вместе с его типом
 class Primitive {
 private:
 	void *object{};
@@ -89,7 +87,7 @@ public:
 	void *GetO();
 };
 
-// Ïðè ñîçäàíèè ñðåäñòâà ðèñîâàíèÿ Graphics ââîäÿòñÿ ãðàôè÷åñêèå ïðèìèòèâû âìåñòå ñ èõ òèïàìè
+// При создании средства рисования Graphics вводятся графические примитивы вместе с их типами
 // Point - 1, Line - 2, Ellipses - 3, Rectangles - 4, Polygon - 5
 class Graphics {
 private:
@@ -98,7 +96,7 @@ public:
 	Graphics() { }
 	Graphics(vector <Primitive> forms);
 	void Info();
-	void Show(int nume);
+	void Show(int nume, HWND &hwnd, HDC &hdc);
 	void Add(Primitive zero);
 	void Remove(int nume);
 	void Clear();
